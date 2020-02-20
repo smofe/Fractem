@@ -25,6 +25,9 @@ speed_acceleration = 2.0
 # Deceleration when not moving
 speed_deceleration = 0.6
 
+# Timer [0,1]
+timer = 0.0
+
 screen_center = (round(resolution[0]/2), round(resolution[1]/2))
 start_position = [0.0, 0.0, 12.0]
 mouse_position = None
@@ -77,8 +80,9 @@ if __name__ == '__main__':
                                      shaders.compileShader(fragment_shader, GL_FRAGMENT_SHADER))
 
     # Fill uniforms of shaders with their values
-    glProgramUniform2fv(program,glGetUniformLocation(program,"u_resolution"),1,resolution)
-    glProgramUniform3fv(program, glGetUniformLocation(program, "u_camera_position"), 1, numpy.array([1.,1.0,12.0]))
+    glProgramUniform2fv(program, glGetUniformLocation(program,"u_resolution"), 1, resolution)
+    glProgramUniform3fv(program, glGetUniformLocation(program, "u_camera_position"), 1, numpy.array([1., 1.0, 12.0]))
+
 
     # Prepare fullscreen_quad to be drawn -> This is our "canvas" on which we draw
     fullscreen_quad = numpy.array([-1.0, -1.0, 0.0, 1.0, -1.0, 0.0, -1.0, 1.0, 0.0, 1.0, 1.0, 0.0], numpy.float32)
@@ -105,7 +109,6 @@ if __name__ == '__main__':
         view_matrix[3, :3] += velocity * (clock.get_time() / 1000)
 
         pressed_keys = pygame.key.get_pressed()
-        speed = 0.1
 
         # Mouse movement and rotations
         prev_mouse_position = mouse_position
@@ -139,8 +142,14 @@ if __name__ == '__main__':
         else:
             velocity += numpy.dot(view_matrix[:3, :3].T, acceleration)
 
+        # update timer
+        timer += clock.get_time()/10000
+        if (timer > 2.0):
+            timer -= 2.0
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glUniformMatrix4fv(glGetUniformLocation(program, "u_view_matrix"), 1, False, view_matrix)
+        glProgramUniform1f(program, glGetUniformLocation(program, "u_timer"), abs(timer-1))
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4)
 
         pygame.display.flip()
