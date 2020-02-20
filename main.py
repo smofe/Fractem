@@ -11,7 +11,7 @@ import glm
 resolution = (1920, 1080)
 full_screen = False
 
-max_fps = 30
+max_fps = 60
 
 # Mouse look speed
 look_speed = 0.003
@@ -139,7 +139,6 @@ if __name__ == '__main__':
             velocity *= speed_deceleration
         else:
             velocity += numpy.dot(view_matrix[:3, :3].T, acceleration)
-
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glUniformMatrix4fv(glGetUniformLocation(program, "u_view_matrix"), 1, False, view_matrix)
