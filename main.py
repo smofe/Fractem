@@ -47,13 +47,16 @@ def make_rotation(angle, axis):
                             [s,  c,  0],
                             [0,  0,  1]], dtype=numpy.float32)
 
+
 def reorthogonalize(mat):
     u, s, v = numpy.linalg.svd(mat)
     return numpy.dot(u, v)
 
+
 def center_mouse():
     if pygame.key.get_focused():
         pygame.mouse.set_pos(screen_center)
+
 
 if __name__ == '__main__':
     # Setup pygame and Screen size
@@ -82,16 +85,12 @@ if __name__ == '__main__':
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, fullscreen_quad)
     glEnableVertexAttribArray(0)
 
-
     # Set program and camera
     glUseProgram(program)
-
+    gluPerspective(60.0, (resolution[0]/resolution[1]), 0.1, 50.0)
     view_matrix = numpy.identity(4, numpy.float32)
     view_matrix[3, :3] = numpy.array(start_position)
 
-    gluPerspective(60.0, (resolution[0]/resolution[1]), 0.1, 50.0)
-
-    glTranslatef(0.0, 0.0, -5)
 
     # Main rendering loop
     clock = pygame.time.Clock()
