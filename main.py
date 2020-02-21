@@ -143,7 +143,7 @@ if __name__ == '__main__':
             velocity += numpy.dot(view_matrix[:3, :3].T, acceleration)
 
         # update timer
-        timer += clock.get_time()/10000
+        timer += clock.get_time()/30000
         if (timer > 2.0):
             timer -= 2.0
 
